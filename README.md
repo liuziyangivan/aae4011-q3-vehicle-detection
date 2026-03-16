@@ -37,36 +37,33 @@ ROS Noetic (Ubuntu 20.04 LTS) based real-time vehicle detection for Unmanned Aer
    source devel/setup.bash
 
 ## Step-by-Step Execution
-Step 1: Prepare Rosbag File
-Copy your assignment rosbag to the data directory (rename to assignment.bag to match code defaults):
+1. Prepare Rosbag File:
    ```bash
    cp /path/to/your/rosbag.bag ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
-Verify rosbag exists:
-   ```bash
    ls ~/aae4011_ws/src/uas_vehicle_detect/data/
-Step 2: Extract Frames from Rosbag
+2. Extract Frames from Rosbag:
    ```bash
    roscore &
    cd ~/aae4011_ws
    source devel/setup.bash
    rosrun uas_vehicle_detect rosbag_extract.py
--Extracted frames are saved to data/extracted_frames/;
--A report (frame count/resolution/FPS) will be printed in terminal.
-Step 3: Run Real-Time Vehicle Detection
+- Extracted frames are saved to data/extracted_frames/;
+- A report (frame count/resolution/FPS) will be printed in terminal.
+3. Run Real-Time Vehicle Detection:
    ```bash
    cd ~/aae4011_ws
    source devel/setup.bash
    roslaunch uas_vehicle_detect vehicle_detect.launch
--An OpenCV window will pop up with real-time detection results;
--Red bounding boxes = vehicles, white labels = class + confidence (e.g., Car: 0.92);
--Green text (bottom-left) = frame count + detected vehicle number.
-Step 4: Visualize with ROS RQT (Official Tool)
+- An OpenCV window will pop up with real-time detection results;
+- Red bounding boxes = vehicles, white labels = class + confidence (e.g., Car: 0.92);
+- Green text (bottom-left) = frame count + detected vehicle number.
+4. Visualize with ROS RQT (Official Tool):
    ```bash
    source ~/aae4011_ws/devel/setup.bash
    rqt_image_view /detect/result_image
-Step 5: Exit
--Press q in the OpenCV window to stop detection;
--Stop ROS Master: kill %1 (if started with roscore &).
+5. Exit
+- Press q in the OpenCV window to stop detection;
+- Stop ROS Master: kill %1 (if started with roscore &).
 
 ## Method Description
 Detection Pipeline
@@ -85,7 +82,7 @@ Detection Pipeline
 -Efficient: Built-in NMS reduces redundant detections for accurate results.
 
 ## Project File Structure
-   ```plaintext
+   ```plaintext:
 uas_vehicle_detect/
 ├── launch/
 │   └── vehicle_detect.launch
