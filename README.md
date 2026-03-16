@@ -116,7 +116,7 @@ Detection Pipeline
 4. Rosbag Size: Rosbag files are excluded from Git (via .gitignore) due to large size – share the rosbag separately if needed.
 
 ## Video Demonstration
-Video demo link: 
+Video demo link: https://youtu.be/DElQpoD0fs0
 
 ## Reflection and Critical Analysis
 (a) What I learned
