@@ -23,79 +23,69 @@ ROS Noetic (Ubuntu 20.04 LTS) based real-time vehicle detection for Unmanned Aer
    sudo apt update && sudo apt install ros-noetic-desktop-full -y
    echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
    source ~/.bashrc
-Install ROS/Python dependencies:
-bash
-运行
-# ROS dependencies (cv_bridge/rosbag/image_transport)
-sudo apt install ros-noetic-cv-bridge ros-noetic-image-transport ros-noetic-rosbag ros-noetic-rqt-image-view python3-catkin-tools -y
-# Python dependencies (YOLOv8/OpenCV)
-pip3 install torch==2.0.1 torchvision==0.15.2 ultralytics==8.0.200 opencv-python==4.8.1.78 numpy==1.24.4
-Build ROS Workspace:
-bash
-运行
-mkdir -p ~/aae4011_ws/src
-cd ~/aae4011_ws/src
-git clone https://github.com/你的GitHub用户名/aae4011-q3-vehicle-detection.git
-cd ~/aae4011_ws
-catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3
-source devel/setup.bash
-Step-by-Step Execution
+2. Install ROS/Python dependencies:
+   ```bash
+   sudo apt install ros-noetic-cv-bridge ros-noetic-image-transport ros-noetic-rosbag ros-noetic-rqt-image-view python3-catkin-tools -y
+   pip3 install torch==2.0.1 torchvision==0.15.2 ultralytics==8.0.200 opencv-python==4.8.1.78 numpy==1.24.4
+3. Build ROS Workspace:
+   ```bash
+   mkdir -p ~/aae4011_ws/src
+   cd ~/aae4011_ws/src
+   git clone https://github.com/liuziyangivan/aae4011-q3-vehicle-detection.git
+   cd ~/aae4011_ws
+   catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3
+   source devel/setup.bash
+
+##Step-by-Step Execution
 Step 1: Prepare Rosbag File
 Copy your assignment rosbag to the data directory (rename to assignment.bag to match code defaults):
-bash
-运行
+```bash
 cp /path/to/your/rosbag.bag ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
 Verify rosbag exists:
-bash
-运行
+```bash
 ls ~/aae4011_ws/src/uas_vehicle_detect/data/
 Step 2: Extract Frames from Rosbag
-bash
-运行
-# Start ROS Master (required for all ROS nodes)
+```bash
 roscore &
-
-# In a NEW terminal
 cd ~/aae4011_ws
 source devel/setup.bash
 rosrun uas_vehicle_detect rosbag_extract.py
-Extracted frames are saved to data/extracted_frames/;
-A report (frame count/resolution/FPS) will be printed in terminal.
+-Extracted frames are saved to data/extracted_frames/;
+-A report (frame count/resolution/FPS) will be printed in terminal.
 Step 3: Run Real-Time Vehicle Detection
-bash
-运行
-# One-click launch (auto starts roscore + detection node)
+```bash
 cd ~/aae4011_ws
 source devel/setup.bash
 roslaunch uas_vehicle_detect vehicle_detect.launch
-An OpenCV window will pop up with real-time detection results;
-Red bounding boxes = vehicles, white labels = class + confidence (e.g., Car: 0.92);
-Green text (bottom-left) = frame count + detected vehicle number.
+-An OpenCV window will pop up with real-time detection results;
+-Red bounding boxes = vehicles, white labels = class + confidence (e.g., Car: 0.92);
+-Green text (bottom-left) = frame count + detected vehicle number.
 Step 4: Visualize with ROS RQT (Official Tool)
-bash
-运行
-# In a NEW terminal
+```bash
 source ~/aae4011_ws/devel/setup.bash
 rqt_image_view /detect/result_image
 Step 5: Exit
-Press q in the OpenCV window to stop detection;
-Stop ROS Master: kill %1 (if started with roscore &).
-Method Description
+-Press q in the OpenCV window to stop detection;
+-Stop ROS Master: kill %1 (if started with roscore &).
+
+##Method Description
 Detection Pipeline
-Rosbag Parsing: Read sensor_msgs/CompressedImage from rosbag topic /hikcamera/image_2/compressed (non-standard Image topic, requires special decoding).
-Image Decoding: Convert compressed image data to OpenCV BGR format using numpy.frombuffer + cv2.imdecode (ROS Noetic compatible).
-YOLOv8 Inference: Run YOLOv8 nano model to detect only vehicle classes (Car/Bus/Truck) with:
-Confidence threshold: 0.25 (filter low-confidence detections);
-IOU threshold: 0.45 (avoid duplicate bounding boxes via NMS).
-Result Annotation: Draw red bounding boxes, white class labels (with confidence scores), and green statistics on images.
-Visualization: Publish annotated images to ROS topic /detect/result_image (for RQT) and display in OpenCV window.
-Why YOLOv8 Nano?
-Lightweight: 6MB model size (ideal for UAS with limited compute resources);
-Real-Time: >30 FPS on Ubuntu 20.04 (meets UAS real-time requirements);
-Pre-trained: COCO dataset pre-training supports vehicle detection out-of-the-box (no manual training);
-Efficient: Built-in NMS reduces redundant detections for accurate results.
-Project File Structure
-plaintext
+1. Rosbag Parsing: Read sensor_msgs/CompressedImage from rosbag topic /hikcamera/image_2/compressed (non-standard Image topic, requires special decoding).
+2. Image Decoding: Convert compressed image data to OpenCV BGR format using numpy.frombuffer + cv2.imdecode (ROS Noetic compatible).
+3. YOLOv8 Inference: Run YOLOv8 nano model to detect only vehicle classes (Car/Bus/Truck) with:
+-Confidence threshold: 0.25 (filter low-confidence detections);
+-IOU threshold: 0.45 (avoid duplicate bounding boxes via NMS).
+4. Result Annotation: Draw red bounding boxes, white class labels (with confidence scores), and green statistics on images.
+5. Visualization: Publish annotated images to ROS topic /detect/result_image (for RQT) and display in OpenCV window.
+
+##Why YOLOv8 Nano?
+-Lightweight: 6MB model size (ideal for UAS with limited compute resources);
+-Real-Time: >30 FPS on Ubuntu 20.04 (meets UAS real-time requirements);
+-Pre-trained: COCO dataset pre-training supports vehicle detection out-of-the-box (no manual training);
+-Efficient: Built-in NMS reduces redundant detections for accurate results.
+
+##Project File Structure
+```plaintext
 uas_vehicle_detect/
 ├── launch/
 │   └── vehicle_detect.launch
@@ -112,13 +102,17 @@ uas_vehicle_detect/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-Important Notes
-Rosbag Topic Check: Ensure the image topic in launch/vehicle_detect.launch matches your rosbag (current: /hikcamera/image_2/compressed). Check via:
-bash
-运行
+
+##Important Notes
+1. Rosbag Topic Check: Ensure the image topic in launch/vehicle_detect.launch matches your rosbag (current: /hikcamera/image_2/compressed). Check via:
+```bash
 rosbag info ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
-YOLOv8 Model Download: If yolov8n.pt fails to download automatically, manually download it to ~/.ultralytics/models/ from https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt.
-Indentation Errors: All Python scripts use 4 spaces for indentation (no tabs) to avoid TabError.
-Rosbag Size: Rosbag files are excluded from Git (via .gitignore) due to large size – share the rosbag separately if needed.
-Author
-Name: LIU ZiyangPolyU ID: 22100364DEmail: 22100364D@connect.polyu.hkCourse: AAE4011 (Unmanned Aerial Systems)
+2. YOLOv8 Model Download: If yolov8n.pt fails to download automatically, manually download it to ~/.ultralytics/models/ from https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt.
+3. Indentation Errors: All Python scripts use 4 spaces for indentation (no tabs) to avoid TabError.
+4. Rosbag Size: Rosbag files are excluded from Git (via .gitignore) due to large size – share the rosbag separately if needed.
+
+##Author
+-Name: LIU Ziyang
+-PolyU ID: 22100364D
+-Email: 22100364D@connect.polyu.hk
+-Course: AAE4011 (Unmanned Aerial Systems)
