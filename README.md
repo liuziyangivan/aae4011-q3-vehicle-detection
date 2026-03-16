@@ -1,6 +1,12 @@
 # AAE4011 Assignment 1 Q3: UAS Vehicle Detection from Rosbag
 ROS Noetic (Ubuntu 20.04 LTS) based real-time vehicle detection for Unmanned Aerial Systems (UAS) using YOLOv8 nano. This project parses `sensor_msgs/CompressedImage` from rosbag topic `/hikcamera/image_2/compressed`, extracts frames, and detects vehicles (Car/Bus/Truck) with annotated bounding boxes/labels/confidence scores.
 
+## Author
+- Name: LIU Ziyang
+- PolyU ID: 22100364D
+- Email: 22100364D@connect.polyu.hk
+- Course: AAE4011 (Unmanned Aerial Systems)
+
 ## Project Overview
 ### Core Objectives
 - Extract frames from ROS compressed image rosbag and report key metrics (frame count, resolution, FPS).
@@ -13,6 +19,26 @@ ROS Noetic (Ubuntu 20.04 LTS) based real-time vehicle detection for Unmanned Aer
 - Detection Model: YOLOv8 nano (ultralytics)
 - Image Topic: `/hikcamera/image_2/compressed` (sensor_msgs/CompressedImage)
 - Language: Python 3.8 (ROS Noetic default)
+
+## Project File Structure
+   ```plaintext
+   uas_vehicle_detect/
+   ├── launch/
+   │   └── vehicle_detect.launch
+   ├── scripts/
+   │   ├── rosbag_extract.py
+   │   └── detect_node.py
+   ├── config/
+   ├── data/
+   │   ├── assignment.bag
+   │   └── extracted_frames/
+   ├── results/
+   ├── package.xml
+   ├── CMakeLists.txt
+   ├── requirements.txt
+   ├── .gitignore
+   └── README.md
+   ```
 
 ## Environment Setup
 ### Prerequisites (Ubuntu 20.04 Only)
@@ -76,40 +102,39 @@ Detection Pipeline
 5. Visualization: Publish annotated images to ROS topic /detect/result_image (for RQT) and display in OpenCV window.
 
 ## Why YOLOv8 Nano?
--Lightweight: 6MB model size (ideal for UAS with limited compute resources);
--Real-Time: >30 FPS on Ubuntu 20.04 (meets UAS real-time requirements);
--Pre-trained: COCO dataset pre-training supports vehicle detection out-of-the-box (no manual training);
--Efficient: Built-in NMS reduces redundant detections for accurate results.
-
-## Project File Structure
-   ```plaintext:
-uas_vehicle_detect/
-├── launch/
-│   └── vehicle_detect.launch
-├── scripts/
-│   ├── rosbag_extract.py
-│   └── detect_node.py
-├── config/
-├── data/
-│   ├── assignment.bag
-│   └── extracted_frames/
-├── results/
-├── package.xml
-├── CMakeLists.txt
-├── requirements.txt
-├── .gitignore
-└── README.md
+- Lightweight: 6MB model size (ideal for UAS with limited compute resources);
+- Real-Time: >30 FPS on Ubuntu 20.04 (meets UAS real-time requirements);
+- Pre-trained: COCO dataset pre-training supports vehicle detection out-of-the-box (no manual training);
+- Efficient: Built-in NMS reduces redundant detections for accurate results.
 
 ## Important Notes
 1. Rosbag Topic Check: Ensure the image topic in launch/vehicle_detect.launch matches your rosbag (current: /hikcamera/image_2/compressed). Check via:
-```bash
-rosbag info ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
+   ```bash
+   rosbag info ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
 2. YOLOv8 Model Download: If yolov8n.pt fails to download automatically, manually download it to ~/.ultralytics/models/ from https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt.
 3. Indentation Errors: All Python scripts use 4 spaces for indentation (no tabs) to avoid TabError.
 4. Rosbag Size: Rosbag files are excluded from Git (via .gitignore) due to large size – share the rosbag separately if needed.
 
-## Author
--Name: LIU Ziyang
--PolyU ID: 22100364D
--Email: 22100364D@connect.polyu.hk
--Course: AAE4011 (Unmanned Aerial Systems)
+## Video Demonstration
+Video demo link: 
+
+## Reflection and Critical Analysis
+(a) What I learned
+1. Technical skills: Mastered rosbag data parsing (extracting image messages from rosbag files) and cv_bridge conversion between ROS sensor_msgs/Image and OpenCV image formats, which are foundational for UAS perception development.
+2. Integration ability: Learned to embed a lightweight deep learning model (YOLOv8n) into a ROS node, realizing real-time data flow from camera input to detection output in a robotic system.
+
+(b) AI tool usage
+1. AI generated ROS template code and debugged errors, greatly speeding up my development.
+2. AI helped me learn Ubuntu and ROS efficiently. It explained concepts clearly, provided step-by-step commands, and solved environment errors.
+
+Benefit: Accelerated coding process. AI assistants quickly generated boilerplate code for ROS subscribers/publishers and YOLO model integration, reducing time spent on syntax debugging.
+
+Limitation: Syntax incompatibility. AI occasionally generated ROS 1/ROS 2 mixed syntax, requiring manual verification and correction for the target ROS version (Noetic/Humble).
+
+(c) Accuracy improvement
+1. Image preprocessing: Add Gaussian denoising and contrast enhancement to input frames to reduce interference from drone vibration and varying lighting conditions.
+2. Post-processing optimization: Implement non-maximum suppression (NMS) with adjusted IoU thresholds to eliminate redundant bounding boxes for overlapping vehicles.
+
+(d) Real-world challenges
+1. Computational constraints: UAS onboard computers (e.g., Raspberry Pi, Jetson Nano) have limited CPU/GPU resources, leading to inference latency if using non-lightweight models.
+2. Environmental interference: Motion blur (from fast UAS flight) and occlusions (e.g., trees, buildings) reduce detection stability and increase false negative rates.
