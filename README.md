@@ -25,17 +25,15 @@ ROS Noetic (Ubuntu 20.04 LTS) based real-time vehicle detection for Unmanned Aer
    source ~/.bashrc
 Install ROS/Python dependencies:
 bash
-运行
 # ROS dependencies (cv_bridge/rosbag/image_transport)
 sudo apt install ros-noetic-cv-bridge ros-noetic-image-transport ros-noetic-rosbag ros-noetic-rqt-image-view python3-catkin-tools -y
 # Python dependencies (YOLOv8/OpenCV)
 pip3 install torch==2.0.1 torchvision==0.15.2 ultralytics==8.0.200 opencv-python==4.8.1.78 numpy==1.24.4
 Build ROS Workspace:
 bash
-运行
 mkdir -p ~/aae4011_ws/src
 cd ~/aae4011_ws/src
-git clone https://github.com/你的GitHub用户名/aae4011-q3-vehicle-detection.git
+git clone https://github.com/liuziyangivan/aae4011-q3-vehicle-detection.git
 cd ~/aae4011_ws
 catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3
 source devel/setup.bash
@@ -43,15 +41,12 @@ Step-by-Step Execution
 Step 1: Prepare Rosbag File
 Copy your assignment rosbag to the data directory (rename to assignment.bag to match code defaults):
 bash
-运行
 cp /path/to/your/rosbag.bag ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
 Verify rosbag exists:
 bash
-运行
 ls ~/aae4011_ws/src/uas_vehicle_detect/data/
 Step 2: Extract Frames from Rosbag
 bash
-运行
 # Start ROS Master (required for all ROS nodes)
 roscore &
 
@@ -63,7 +58,6 @@ Extracted frames are saved to data/extracted_frames/;
 A report (frame count/resolution/FPS) will be printed in terminal.
 Step 3: Run Real-Time Vehicle Detection
 bash
-运行
 # One-click launch (auto starts roscore + detection node)
 cd ~/aae4011_ws
 source devel/setup.bash
@@ -73,7 +67,6 @@ Red bounding boxes = vehicles, white labels = class + confidence (e.g., Car: 0.9
 Green text (bottom-left) = frame count + detected vehicle number.
 Step 4: Visualize with ROS RQT (Official Tool)
 bash
-运行
 # In a NEW terminal
 source ~/aae4011_ws/devel/setup.bash
 rqt_image_view /detect/result_image
@@ -115,7 +108,6 @@ uas_vehicle_detect/
 Important Notes
 Rosbag Topic Check: Ensure the image topic in launch/vehicle_detect.launch matches your rosbag (current: /hikcamera/image_2/compressed). Check via:
 bash
-运行
 rosbag info ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
 YOLOv8 Model Download: If yolov8n.pt fails to download automatically, manually download it to ~/.ultralytics/models/ from https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt.
 Indentation Errors: All Python scripts use 4 spaces for indentation (no tabs) to avoid TabError.
