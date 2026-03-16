@@ -1,0 +1,22 @@
+<launch>
+    <!-- ROS Noetic UAS Vehicle Detection Launch File (Ubuntu 20.04) -->
+    <!-- ########## ONLY EDIT THIS LINE: YOUR ROSBAG IMAGE TOPIC ########## -->
+    <param name="/image_topic" value="/hikcamera/image_2/compre<launch>
+    <!-- ROS Noetic UAS Vehicle Detection Launch File (Ubuntu 20.04) -->
+    <!-- ########## ONLY EDIT THIS LINE: YOUR ROSBAG IMAGE TOPIC ########## -->
+    <param name="/image_topic" value="/camera/image_raw" />
+    <!-- ################################################################# -->
+    <!-- YOLO Detection Thresholds (configurable) -->
+    <param name="/conf_thres" value="0.25" />
+    <param name="/iou_thres" value="0.45" />
+    <!-- Rosbag File Path (match Step6: data/assignment.bag) -->
+    <param name="/bag_file" value="$(find uas_vehicle_detect)/data/assignment.bag" />
+    <!-- Start Detection Node (Noetic) -->
+    <node 
+        name="uas_vehicle_detection_node" 
+        pkg="uas_vehicle_detect" 
+        type="detect_node.py" 
+        output="screen"
+        respawn="false">
+    </node>
+</launch>

@@ -1,0 +1,29 @@
+# ROS Noetic Build Files
+build/
+devel/
+install/
+log/
+.catkin_workspace
+
+# Python3 Cache (Ubuntu20.04)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+
+# System Files (Ubuntu20.04)
+*.swp
+*.swo
+*.DS_Store
+*.log
+*.tmp
+
+# Local Data (Large Files)
+data/extracted_frames/
+data/*.bag
+results/
+
+# YOLO Models
+*.pt
+*.onnx
