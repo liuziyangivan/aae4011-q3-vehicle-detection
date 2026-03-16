@@ -36,7 +36,7 @@ ROS Noetic (Ubuntu 20.04 LTS) based real-time vehicle detection for Unmanned Aer
    catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3
    source devel/setup.bash
 
-##Step-by-Step Execution
+## Step-by-Step Execution
 Step 1: Prepare Rosbag File
 Copy your assignment rosbag to the data directory (rename to assignment.bag to match code defaults):
 ```bash
@@ -68,7 +68,7 @@ Step 5: Exit
 -Press q in the OpenCV window to stop detection;
 -Stop ROS Master: kill %1 (if started with roscore &).
 
-##Method Description
+## Method Description
 Detection Pipeline
 1. Rosbag Parsing: Read sensor_msgs/CompressedImage from rosbag topic /hikcamera/image_2/compressed (non-standard Image topic, requires special decoding).
 2. Image Decoding: Convert compressed image data to OpenCV BGR format using numpy.frombuffer + cv2.imdecode (ROS Noetic compatible).
@@ -78,13 +78,13 @@ Detection Pipeline
 4. Result Annotation: Draw red bounding boxes, white class labels (with confidence scores), and green statistics on images.
 5. Visualization: Publish annotated images to ROS topic /detect/result_image (for RQT) and display in OpenCV window.
 
-##Why YOLOv8 Nano?
+## Why YOLOv8 Nano?
 -Lightweight: 6MB model size (ideal for UAS with limited compute resources);
 -Real-Time: >30 FPS on Ubuntu 20.04 (meets UAS real-time requirements);
 -Pre-trained: COCO dataset pre-training supports vehicle detection out-of-the-box (no manual training);
 -Efficient: Built-in NMS reduces redundant detections for accurate results.
 
-##Project File Structure
+## Project File Structure
 ```plaintext
 uas_vehicle_detect/
 ├── launch/
@@ -103,7 +103,7 @@ uas_vehicle_detect/
 ├── .gitignore
 └── README.md
 
-##Important Notes
+## Important Notes
 1. Rosbag Topic Check: Ensure the image topic in launch/vehicle_detect.launch matches your rosbag (current: /hikcamera/image_2/compressed). Check via:
 ```bash
 rosbag info ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
@@ -111,7 +111,7 @@ rosbag info ~/aae4011_ws/src/uas_vehicle_detect/data/assignment.bag
 3. Indentation Errors: All Python scripts use 4 spaces for indentation (no tabs) to avoid TabError.
 4. Rosbag Size: Rosbag files are excluded from Git (via .gitignore) due to large size – share the rosbag separately if needed.
 
-##Author
+## Author
 -Name: LIU Ziyang
 -PolyU ID: 22100364D
 -Email: 22100364D@connect.polyu.hk
